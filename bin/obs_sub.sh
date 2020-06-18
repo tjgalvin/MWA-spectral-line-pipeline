@@ -68,8 +68,7 @@ then
     taskline=""
 fi
 
-dbdir="/group/mwasci/$USER/GLEAM-X-pipeline/"
-codedir="/group/mwasci/$USER/GLEAM-X-pipeline/"
+codedir="/group/mwasci/$USER/MWA-spectral-line-pipeline/"
 queue="-p $standardq"
 datadir=/astro/mwasci/$USER/$project
 
@@ -81,7 +80,6 @@ fi
 
 script="${codedir}queue/sub_${obsnum}.sh"
 
-#                                     -e "s:DBDIR:${dbdir}:g" \
 cat ${codedir}bin/sub.tmpl | sed -e "s:OBSNUM:${obsnum}:g" \
                                      -e "s:DATADIR:${datadir}:g" \
                                      -e "s:HOST:${computer}:g" \
@@ -110,10 +108,6 @@ taskid=1
 # rename the err/output files as we now know the jobid
 error=`echo ${error} | sed "s/%A/${jobid}/"`
 output=`echo ${output} | sed "s/%A/${jobid}/"`
-
-# record submission
-#python ${dbdir}/bin/track_task.py queue --jobid=${jobid} --taskid=${taskid} --task='uvsub' --submission_time=`date +%s` --batch_file=${script} \
-#                     --obs_id=${obsnum} --stderr=${error} --stdout=${output}
 
 echo "Submitted ${script} as ${jobid} . Follow progress here:"
 echo $output
