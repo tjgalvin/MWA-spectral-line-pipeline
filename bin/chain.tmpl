@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+obsnum=OBSNUM
+project=PROJECT
+account=ACCOUNT
+
+# Cotter is from GLEAM-X-pipeline
+# Cotter settings for spectral line pipeline -- only necessary if you've downloaded raw measurement sets
+#dep=($(obs_cotter.sh -s 8 -k 10 -p $project -a $account $obsnum))
+#depend=${dep[3]}
+#echo "cotter jobid: $depend"
+
+# Autoflag is from GLEAM-X-pipeline
+dep=($(obs_autoflag.sh -p $project -a $account $obsnum))
+depend=${dep[3]}
+echo "flag jobid: $depend"
+
+# Autocal is from GLEAM-X-pipeline
+dep=($(obs_autocal.sh -p $project -a $account -d $depend $obsnum))
+depend=${dep[3]}
+echo "cal jobid: $depend"
+
+# Applycal is from GLEAM-X-pipeline
+dep=($(obs_apply_cal.sh -p $project -a $account -d $depend -c $obsnum $obsnum))
+depend=${dep[3]}
+echo "apply-cal jobid: $depend"
+
+# Uvflag is from GLEAM-X-pipeline
+dep=($(obs_uvflag.sh -p $project -a $account -d $depend $obsnum))
+depend=${dep[3]}
+echo "uv-flag jobid: $depend"
+
+# Subtraction is from MWA-spectral-line-pipeline
+dep=($(obs_sub.sh -p $project -d $depend -a $account $obsnum))
+depend=${dep[3]}
+echo "uv-sub jobid: $depend"
+
+# Spectral line imaging is from MWA-spectral-line-pipeline
+dep=($(obs_testimage.sh -p $project -a $account -d $depend $obsnum))
+depend=${dep[3]}
+echo "imaging jobid: $depend"
