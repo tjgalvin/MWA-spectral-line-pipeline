@@ -8,22 +8,23 @@ To use this pipeline you will also need to install the GLEAM-X-pipeline (https:/
 
 The unique parts of this pipeline are described here:
 
-Wrapper scripts
+## Wrapper scripts
 Carry out the recommended steps of the spectral line processing to go from raw visibilities to continuum-subtracted fine-channel images
-spec_process.sh
-chain.tmpl
+- spec_process.sh
+- chain.tmpl
 
-uv-plane continuum subtraction
-obs_sub.sh -- the wrapper script to submit the job
-sub.tmpl -- the template file that is modified to produce the job script
-sub_uv_cont.py -- actually do the visibility continuum subtraction
+### uv-plane continuum subtraction
+- obs_sub.sh -- the wrapper script to submit the job
+- sub.tmpl -- the template file that is modified to produce the job script
+- sub_uv_cont.py -- actually do the visibility continuum subtraction
 
-Imaging scripts
-obs_spec_image.sh -- the wrapper script to submit the job
-specimage.tmpl -- the template file that is modified to produce the job script
-update_bscale.py -- rescale the images by the primary beam
-rms_par.py -- measure the RMS of all the final images in a fast parallelised way
+### Imaging scripts
+- obs_spec_image.sh -- the wrapper script to submit the job
+- specimage.tmpl -- the template file that is modified to produce the job script
+- update_bscale.py -- rescale the images by the primary beam
+- rms_par.py -- measure the RMS of all the final images in a fast parallelised way
 
-Plotting scripts -- help diagnose bad images
-plot_peak.py -- plot the peak value of the center of each MFS image as a function of epoch
-plot_rms.py -- plot the RMS of each MFS image as a function of epoch
+### Plotting scripts
+These help diagnose bad images and can be run in the project directory directly on the command-line.
+- plot_peak.py -- plot the peak value of the center of each MFS image as a function of epoch
+- plot_rms.py -- plot the RMS of each MFS image as a function of epoch
