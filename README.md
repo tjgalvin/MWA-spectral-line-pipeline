@@ -4,7 +4,7 @@ A simple spectral line processing pipeline for the Murchison Widefield Array
 This memo describes the overall goal, initial testing performed, and computational costs of the pipeline:
 Fast_Targeted_Spectral_Line_Imaging_for_the_MWA.pdf
 
-To use this pipeline you will also need to install the GLEAM-X-pipeline (https://github.com/nhurleywalker/GLEAM-X-pipeline) as it peforms necessary calibration and flagging steps. Review the documentation there for an overall description of how this pipeline is designed to run on Pawsey systems.
+If you do not already have flagged and calibrated MWA data, you will also need to install the GLEAM-X-pipeline (https://github.com/nhurleywalker/GLEAM-X-pipeline) as it these steps. Review the documentation there for an overall description of how this pipeline is designed to run on Pawsey systems.
 
 ## Credits
 Please credit Natasha Hurley-Walker if you use this code, or incorporate it into your own workflow. Please acknowledge the use of this code by citing this repository, and until I have a publication accepted on this work, I request that I be added as a co-author on papers that rely on this code.
