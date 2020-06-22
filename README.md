@@ -8,7 +8,7 @@ To use this pipeline you will also need to install the GLEAM-X-pipeline (https:/
 
 The unique parts of this pipeline are described here:
 
-## Wrapper scripts
+### Wrapper scripts
 Carry out the recommended steps of the spectral line processing to go from raw visibilities to continuum-subtracted fine-channel images
 - spec_process.sh
 - chain.tmpl
