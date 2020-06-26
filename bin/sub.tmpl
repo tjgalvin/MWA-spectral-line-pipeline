@@ -29,7 +29,7 @@ cd $datadir/$obsnum
 # G0037
 #chgcentre ${obsnum}.ms 09h24m20s -22d01m42s
 
-python /group/mwasci/nhurleywalker/MWA_Bits/sub_uv_cont.py --msfile ${obsnum}.ms --datacolumn DATA
+python /group/mwasci/nhurleywalker/MWA-spectral-line-pipeline/bin/sub_uv_cont.py --msfile ${obsnum}.ms --datacolumn DATA
 
 # temporarily retain
 if [[ -d ${obsnum}_sub.ms ]]
