@@ -8,10 +8,32 @@ from glob import glob
 import argparse
 # Parallelise the code
 import multiprocessing
-# multiple cores support
-import pprocess
+# multiple cores support, deprecated in python3
+#import pprocess
 
 ''' calculate image RMS'''
+
+def _crms(args):
+    """
+    A shallow wrapper for calc_rms
+
+    Parameters
+    ----------
+    args : list
+        A list of arguments for calc_rms
+
+    Returns
+    -------
+    None
+    """
+    # an easier to debug traceback when multiprocessing
+    # thanks to https://stackoverflow.com/a/16618842/1710603
+    try:
+        return calc_rms(*args)
+    except:
+        import traceback
+        raise Exception("".join(traceback.format_exception(*sys.exc_info())))
+
 
 def calc_rms(image):
     rmsimage = image.replace(".fits", "_rms.fits")
@@ -37,12 +59,26 @@ if __name__ == "__main__":
     imagelist = glob(options.images)
 
     cores = multiprocessing.cpu_count()
-    results = pprocess.Map(limit=cores)
-    calc = results.manage(pprocess.MakeParallel(calc_rms))
 
-    for image in imagelist:
-        print image
-        calc(image)
+# Replaced tidy pprocess with baggy multiprocess because pprocess is deprecated in python3
+    pool = multiprocessing.Pool(processes=cores, maxtasksperchild=1)
+    try:
+        # chunksize=1 ensures that we only send a single task to each process
+        results = pool.map_async(_crms, imagelist, chunksize=1).get(timeout=10000000)
+    except KeyboardInterrupt:
+        pool.close()
+        sys.exit(1)
+    pool.close()
+    pool.join()
 
-# Maybe this makes it finish??
     rmslist = map(list, zip(*results))
+
+#    results = pprocess.Map(limit=cores)
+#    calc = results.manage(pprocess.MakeParallel(calc_rms))
+
+#    for image in imagelist:
+#        print(image)
+#        calc(image)
+
+# Unless you do this, it never finishes
+#    rmslist = map(list, zip(*results))
