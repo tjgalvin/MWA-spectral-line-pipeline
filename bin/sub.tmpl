@@ -1,19 +1,10 @@
 #! /bin/bash -l
-#SBATCH --export=NONE
-#SBATCH -M HOST
-#SBATCH -p STANDARDQ
-#SBATCH --account=ACCOUNT
-#SBATCH --time=02:00:00
-#SBATCH --nodes=1
-TASKLINE
 
-source /group/mwasci/$SLURM_JOB_USER/GLEAM-X-pipeline/GLEAM-X-pipeline.profile
-module load python-casacore
 
 datadir=DATADIR
 obsnum=OBSNUM
 
-cd $datadir/$obsnum
+cd "${datadir}/${obsnum}" || exit
 
 #TODO tidy this
 
@@ -29,7 +20,8 @@ cd $datadir/$obsnum
 # G0037
 #chgcentre ${obsnum}.ms 09h24m20s -22d01m42s
 
-python /group/mwasci/nhurleywalker/MWA-spectral-line-pipeline/bin/sub_uv_cont.py --msfile ${obsnum}.ms --datacolumn DATA
+# Since there is no gleam_xsl package, this needs to be passed by path
+python "${GXSLBASE}"/bin/sub_uv_cont.py --msfile ${obsnum}.ms --datacolumn DATA
 
 # temporarily retain
 if [[ -d ${obsnum}_sub.ms ]]

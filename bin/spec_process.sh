@@ -5,7 +5,6 @@
 usage()
 {
 echo "spec_process.sh [-p project] [-a account] obsnum
-  -a account : computing account, default pawsey0280
   -p project : project, (must be specified, no default)
   obsnum     : the obsid to spec_process" 1>&2;
 exit 1;
@@ -15,12 +14,9 @@ scratch="/astro"
 group="/group"
 
 # parse args and set options
-while getopts ':p:a:' OPTION
+while getopts ':p:' OPTION
 do
     case "$OPTION" in
-    a)
-        account=${OPTARG}
-        ;;
     p)
         project=${OPTARG}
         ;;
@@ -38,16 +34,17 @@ then
     usage
 fi
 
-if [[ -z ${account} ]]
+if [[ ! -z ${GXSLACCOUNT} ]]
 then
-    account=pawsey0280
+    account="--account=${GXSLACCOUNT}"
 fi
 
-base="$scratch/mwasci/$USER/$project/"
-code="$group/mwasci/$USER/MWA-spectral-line-pipeline/"
-script="${code}queue/spec_process_${obsnum}.sh"
 
-cat ${code}/bin/chain.tmpl | sed -e "s:OBSNUM:${obsnum}:g" \
+queue="-p ${GXSTANDARDQ}"
+base="${GXSLSCRATCH}/${project}"
+
+script="${GXSLSCRIPT}/spec_${obsnum}.sh"
+cat ${GXSLBASE}/bin/chain.tmpl | sed -e "s:OBSNUM:${obsnum}:g" \
                                  -e "s:PROJECT:${project}:g" \
                                  -e "s:ACCOUNT:${account}:g" \
                                   > ${script}

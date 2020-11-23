@@ -1,23 +1,14 @@
 #! /bin/bash -l
-#SBATCH --export=NONE
-#SBATCH -M HOST
-#SBATCH -p STANDARDQ
-#SBATCH --account=ACCOUNT
-#SBATCH --time=12:00:00
-#SBATCH --ntasks=NCPUS
-#SBATCH --nodes=1
-
-source /group/mwasci/$SLURM_JOB_USER/GLEAM-X-pipeline/GLEAM-X-pipeline.profile
 
 # Set version number
-cores=`grep -P '^core id\t' /proc/cpuinfo  | wc -l`
+cores=$(grep -c -P '^core id\t' /proc/cpuinfo)
 obsnum=OBSNUM
 base=BASEDIR
 
-datadir=${base}/${obsnum}
-cd ${datadir}
+datadir="${base}/${obsnum}"
+cd ${datadir} || exit
 
-metafits=`ls -t ${obsnum}*metafits* | head -1`
+metafits=$(ls -t ${obsnum}*metafits* | head -1)
 
 # Set up telescope-configuration-dependent options
 if [[ $obsnum -lt 1151402936 ]] ; then
@@ -38,9 +29,9 @@ elif [[ $obsnum -ge 1191580576 ]] ; then
 fi
 
 # Set up channel-dependent options
-chan=`pyhead.py -p CENTCHAN ${metafits} | awk '{print $3}'`
+chan=$(pyhead.py -p CENTCHAN ${metafits} | awk '{print $3}')
 # Pixel scale
-scale=`echo "$basescale / $chan" | bc -l` # At least 4 pix per synth beam for each channel
+scale=$(echo "$basescale / $chan" | bc -l) # At least 4 pix per synth beam for each channel
 
 # Small images fine-channel inversion (no cleaning)
 # Split into three blocks in order to work within constraints of number of open files on Pawsey systems
@@ -101,9 +92,10 @@ mv ${obsnum}_fine*-dirty.fits block_3
 # Tidy up the images and put them back in the original observation directory
 if [[ -d block_1 ]] && [[ -d block_2 ]] && [[ -d block_3 ]]
 then
-    cd block_1
+    cd block_1 || exit
     mv ${obsnum}_fine-MFS-dirty.fits ${obsnum}_fine-MFS1-dirty.fits
-    cd ../block_2
+    
+    cd ../block_2  || exit
     for file in *-dirty.fits
     do
         chan=${file:16:4}
@@ -112,12 +104,13 @@ then
         # Remove front-padded zeros
             chan=$(echo $chan | sed 's/^0*//')
             ((chan+=1024))
-            mv $file ${file:0:16}${chan}${file:20:30}
+            mv "${file}" "${file:0:16}${chan}${file:20:30}"
         else
-            mv $file ${file:0:16}MFS2-${file:20:30}
+            mv "${file}" "${file:0:16}MFS2-${file:20:30}"
         fi
     done
-    cd ../block_3
+
+    cd ../block_3 || exit
     for file in *-dirty.fits
     do
         chan=${file:16:4}
@@ -126,17 +119,20 @@ then
             # Remove front-padded zeros
             chan=$(echo $chan | sed 's/^0*//')
             ((chan+=2048))
-            mv $file ${file:0:16}${chan}${file:20:30}
+            mv "${file}" "${file:0:16}${chan}${file:20:30}"
         else
-            mv $file ${file:0:16}MFS3-${file:20:30}
+            mv "${file}" "${file:0:16}MFS3-${file:20:30}"
         fi
     done
+
     cd ../
     mv block_?/${obsnum}*fits ./
     rmdir block_1 block_2 block_3
-# Perform the primary beam correction using the MWA FEE beam
+
+    # Perform the primary beam correction using the MWA FEE beam
     update_bscale.py --metafits=${obsnum}.metafits --images=${obsnum}_fine-*-dirty.fits
-# Calculate the RMS of each image
+
+    # Calculate the RMS of each image
     rms_par.py --images=${obsnum}_fine-*-dirty.fits
 else
     echo "Not all block directories were found -- imaging failed, or directory was already tidied."

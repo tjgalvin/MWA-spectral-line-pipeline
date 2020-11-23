@@ -1,17 +1,20 @@
 #!/usr/bin/env python
 
-#import sys
+# import sys
 import os
 from astropy.io import fits
 import numpy as np
 from glob import glob
 import argparse
+
 # Parallelise the code
 import multiprocessing
-# multiple cores support, deprecated in python3
-#import pprocess
 
-''' calculate image RMS'''
+# multiple cores support, deprecated in python3
+# import pprocess
+
+""" calculate image RMS"""
+
 
 def _crms(args):
     """
@@ -32,35 +35,42 @@ def _crms(args):
         return calc_rms(*args)
     except:
         import traceback
+
         raise Exception("".join(traceback.format_exception(*sys.exc_info())))
 
 
 def calc_rms(image):
     rmsimage = image.replace(".fits", "_rms.fits")
-#    if not os.path.exists(rmsimage):
+    #    if not os.path.exists(rmsimage):
     hdu = fits.open(image)
     rms = np.nanstd(hdu[0].data)
-# Give blank images very large RMS
+    # Give blank images very large RMS
     if rms == 0.0:
-        rms = 2.**126
-    rms_map = rms*np.ones(hdu[0].data.shape,dtype="float32")
+        rms = 2.0 ** 126
+    rms_map = rms * np.ones(hdu[0].data.shape, dtype="float32")
     hdu[0].data = rms_map
     hdu.writeto(rmsimage, overwrite=True)
     hdu.close()
     return [rmsimage]
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     group1 = parser.add_argument_group("required arguments:")
-    group1.add_argument('--images', type=str, dest="images", default=None, \
-                        help="The image files to calculate the RMS for (no default, use globbing)")
+    group1.add_argument(
+        "--images",
+        type=str,
+        dest="images",
+        default=None,
+        help="The image files to calculate the RMS for (no default, use globbing)",
+    )
     options = parser.parse_args()
 
     imagelist = glob(options.images)
 
     cores = multiprocessing.cpu_count()
 
-# Replaced tidy pprocess with baggy multiprocess because pprocess is deprecated in python3
+    # Replaced tidy pprocess with baggy multiprocess because pprocess is deprecated in python3
     pool = multiprocessing.Pool(processes=cores, maxtasksperchild=1)
     try:
         # chunksize=1 ensures that we only send a single task to each process

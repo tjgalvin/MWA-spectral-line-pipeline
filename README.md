@@ -6,6 +6,8 @@ Fast_Targeted_Spectral_Line_Imaging_for_the_MWA.pdf
 
 If you do not already have flagged and calibrated MWA data, you will also need to install the GLEAM-X-pipeline (https://github.com/nhurleywalker/GLEAM-X-pipeline) as it uses it for these steps. Review the documentation there for an overall description of how this pipeline is designed to run on Pawsey systems.
 
+The normal GLEAM-X pipeline is currently being revised and generalised to make use of singularity containers for software and profile scripts for to specify HPC configuration. This version is still being developed and accessible at https://github.com/tjgalvin/GLEAM-X-pipeline.
+
 ## Credits
 Please credit Natasha Hurley-Walker if you use this code, or incorporate it into your own workflow. Please acknowledge the use of this code by citing this repository, and until I have a publication accepted on this work, I request that I be added as a co-author on papers that rely on this code.
 
@@ -31,3 +33,14 @@ Carry out the recommended steps of the spectral line processing to go from raw v
 These help diagnose bad images and can be run in the project directory directly on the command-line.
 - plot_peak.py -- plot the peak value of the center of each MFS image as a function of epoch
 - plot_rms.py -- plot the RMS of each MFS image as a function of epoch
+
+## Deploying
+The process to deploy this pipeline is the same basic approach as the GLEAM-X Pipeline. 
+- `git clone` this repository
+- Copy the example template profile and customise it for your HPC e.g. `cp GLEAM-XSL-pipeline-template.profile GLEAM-XSL-pipeline-hpc.profile`
+- Source the `GLEAM-XSL-pipeline-hpc.profile` to establish the directories and environment
+
+Contact a member of the GLEAM-X time if you require access to the GLEAM-X singularity container. 
+
+## Dependencies
+At the moment, other than `slurm` the only dependency is a deployed and working copy of the GLEAM-X pipeline (the updated pipeline described above). Initial processing tasks directly call GLEAM-X components, and these are assumed to be available. Some initial checks are done to try to ensure that the package is present, but these should not be relied upon. 

@@ -11,31 +11,31 @@ account=ACCOUNT
 #echo "cotter jobid: $depend"
 
 # Autoflag is from GLEAM-X-pipeline
-dep=($(obs_autoflag.sh -p $project -a $account $obsnum))
+dep=($(obs_autoflag.sh -p $project $obsnum))
 depend=${dep[3]}
 echo "flag jobid: $depend"
 
 # Autocal is from GLEAM-X-pipeline
-dep=($(obs_autocal.sh -p $project -a $account -d $depend $obsnum))
+dep=($(obs_autocal.sh -p $project -d $depend $obsnum))
 depend=${dep[3]}
 echo "cal jobid: $depend"
 
 # Applycal is from GLEAM-X-pipeline
-dep=($(obs_apply_cal.sh -p $project -a $account -d $depend -c $obsnum $obsnum))
+dep=($(obs_apply_cal.sh -p $project -d $depend -c $obsnum $obsnum))
 depend=${dep[3]}
 echo "apply-cal jobid: $depend"
 
 # Uvflag is from GLEAM-X-pipeline
-dep=($(obs_uvflag.sh -p $project -a $account -d $depend $obsnum))
+dep=($(obs_uvflag.sh -p $project -d $depend $obsnum))
 depend=${dep[3]}
 echo "uv-flag jobid: $depend"
 
 # Subtraction is from MWA-spectral-line-pipeline
-dep=($(obs_sub.sh -p $project -d $depend -a $account $obsnum))
+dep=($(obs_sub.sh -p $project -d $depend $obsnum))
 depend=${dep[3]}
 echo "uv-sub jobid: $depend"
 
 # Spectral line imaging is from MWA-spectral-line-pipeline
-dep=($(obs_spec_image.sh -p $project -a $account -d $depend $obsnum))
+dep=($(obs_spec_image.sh -p $project -d $depend $obsnum))
 depend=${dep[3]}
 echo "imaging jobid: $depend"
