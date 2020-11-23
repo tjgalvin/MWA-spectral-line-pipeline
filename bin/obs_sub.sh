@@ -70,7 +70,7 @@ echo '#!/bin/bash' > ${script}.sbatch
 echo "singularity run ${GXCONTAINER} ${script}" >> ${script}.sbatch
 
 sub="sbatch --export=ALL  --time=2:00:00 --mem=${GXABSMEMORY}G -M ${GXCOMPUTER} --output=${output} --error=${error}"
-sub="${sub} ${GXNCPULINE} ${account} ${GXTASKLINE} ${depend} ${queue} ${script}.sbatch"
+sub="${sub} ${GXNCPULINE} ${account} ${GXSLTASKLINE} ${depend} ${queue} ${script}.sbatch"
 if [[ ! -z ${tst} ]]
 then
     echo "script is ${script}"

@@ -46,7 +46,6 @@ base="${GXSLSCRATCH}/${project}"
 script="${GXSLSCRIPT}/spec_${obsnum}.sh"
 cat ${GXSLBASE}/bin/chain.tmpl | sed -e "s:OBSNUM:${obsnum}:g" \
                                  -e "s:PROJECT:${project}:g" \
-                                 -e "s:ACCOUNT:${account}:g" \
                                   > ${script}
 
 chmod +x ${script}
