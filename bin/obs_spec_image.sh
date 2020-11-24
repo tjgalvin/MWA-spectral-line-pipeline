@@ -37,7 +37,7 @@ shift  "$(($OPTIND -1))"
 obsnum=$1
 
 # if obsid is empty then just print help
-if [[ -z ${obsnum} ]] || [[ -z $project ]] || [[ ! -d ${base} ]]
+if [[ -z ${obsnum} ]] || [[ -z $project ]] 
 then
     usage
 fi
