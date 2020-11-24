@@ -32,17 +32,17 @@ def continuum_subtract(msfile, binwidth):
     avg.mask = total_flags
 
     # Calculate the moving average
-    for i in range(binwidth / 2, nchans - binwidth / 2):
+    for i in range(binwidth // 2, nchans - binwidth // 2):
         avg[:, i, :] = np.ma.mean(
-            mdata[:, i - binwidth / 2 : i + binwidth / 2, :], axis=1
+            mdata[:, i - binwidth // 2 : i + binwidth // 2, :], axis=1
         )
 
     # Handle the edges with a single mean across (half the binwidth) channels
-    avg_start = np.ma.mean(mdata[:, 0 : binwidth / 2, :], axis=1)
-    avg_end = np.ma.mean(mdata[:, nchans - binwidth / 2 : nchans, :], axis=1)
-    for i in range(0, binwidth / 2):
+    avg_start = np.ma.mean(mdata[:, 0 : binwidth // 2, :], axis=1)
+    avg_end = np.ma.mean(mdata[:, nchans - binwidth // 2 : nchans, :], axis=1)
+    for i in range(0, binwidth // 2):
         avg[:, i, :] = avg_start
-    for i in range(nchans - binwidth / 2, nchans):
+    for i in range(nchans - binwidth // 2, nchans):
         avg[:, i, :] = avg_end
 
     mset_sub = table(msfile.replace(".ms", "_sub.ms"), readonly=False)
@@ -82,4 +82,4 @@ if __name__ == "__main__":
         parser.print_help()
         sys.exit()
 
-    continuum_subtract(args.msfile, args.binwidth)
+    continuum_subtract(options.msfile, options.binwidth)
