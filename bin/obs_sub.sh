@@ -66,6 +66,8 @@ cat ${GXSLBASE}/bin/sub.tmpl | sed -e "s:OBSNUM:${obsnum}:g" \
 output="${GXSLLOG}/sub_${obsnum}.o%A"
 error="${GXSLLOG}/sub_${obsnum}.e%A"
 
+chmod 775 "${script}"
+
 echo '#!/bin/bash' > ${script}.sbatch
 echo "singularity run ${GXCONTAINER} ${script}" >> ${script}.sbatch
 

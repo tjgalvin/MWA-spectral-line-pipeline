@@ -82,4 +82,4 @@ if __name__ == "__main__":
         parser.print_help()
         sys.exit()
 
-    continuum_subtract(args.msfile, args.binwidth)
+    continuum_subtract(options.msfile, options.binwidth)
