@@ -130,10 +130,10 @@ then
     rmdir block_1 block_2 block_3
 
     # Perform the primary beam correction using the MWA FEE beam
-    update_bscale.py --metafits=${obsnum}.metafits --images=${obsnum}_fine-*-dirty.fits
+    python "${GXSLBASE}"/bin/update_bscale.py --metafits=${obsnum}.metafits --images=${obsnum}_fine-*-dirty.fits
 
     # Calculate the RMS of each image
-    rms_par.py --images=${obsnum}_fine-*-dirty.fits
+    python "${GXSLBASE}"/bin/rms_par.py --images=${obsnum}_fine-*-dirty.fits
 else
     echo "Not all block directories were found -- imaging failed, or directory was already tidied."
 fi    
