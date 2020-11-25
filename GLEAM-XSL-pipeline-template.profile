@@ -5,10 +5,11 @@
 # this separate repository. 
 echo "loading gleam-x pectral line profile"
 
-# Any system module file should be loaded here. Aside from singularity and slurm there are
-# no additional modules that are expected to be needed
-module load singularity
+# Any system configurations that need to be set that is not already handled by the GLEAM-X pipeline profile
+# should be done here. 
 
+
+# Ensure the GLEAM-X profile has been loaded with a simple check
 if [[ -z ${GXBASE} ]]
 then
     echo "Ensure the GLEAM-X profile has been loaded correctly. GXBASE was not found. "
