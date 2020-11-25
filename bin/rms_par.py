@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# import sys
+import sys
 import os
 from astropy.io import fits
 import numpy as np
@@ -32,7 +32,7 @@ def _crms(args):
     # an easier to debug traceback when multiprocessing
     # thanks to https://stackoverflow.com/a/16618842/1710603
     try:
-        return calc_rms(*args)
+        return calc_rms(args)
     except:
         import traceback
 
@@ -67,6 +67,7 @@ if __name__ == "__main__":
     options = parser.parse_args()
 
     imagelist = glob(options.images)
+    print('Image list is {0}'.format(len(imagelist)))
 
     cores = multiprocessing.cpu_count()
 
